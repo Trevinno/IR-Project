@@ -93,7 +93,6 @@ class BM25:
     
         return scores
 
-
     #Takes in our search query and returns the results
     def search(self, query, recipe_max):
         scores = self.get_scores(query)

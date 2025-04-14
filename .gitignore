@@ -1,3 +1,13 @@
 # Dataset folder
 data/raw/*
 data/processed/*
+
+ir_model/pre_processing/py_venv/*
+ir_model/pre_processing/venv/*
+ir_model/pre_processing/utils/__pycache__/*
+
+
+ir_model/backend/py_venv/*
+ir_model/backend/venv/*
+ir_model/backend/__pycache__/*
+
