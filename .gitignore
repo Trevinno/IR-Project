@@ -1,4 +1,7 @@
 # Dataset folder
+.DS_Store
+data/.DS_Store
+
 data/raw/*
 data/processed/*
 
