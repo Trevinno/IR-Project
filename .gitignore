@@ -14,3 +14,28 @@ ir_model/backend/py_venv/*
 ir_model/backend/venv/*
 ir_model/backend/__pycache__/*
 
+
+# Front end gitignore
+frontend/recipes_frontend/node_modules
+
+# Output
+frontend/recipes_frontend/.output
+frontend/recipes_frontend/.vercel
+frontend/recipes_frontend/.netlify
+frontend/recipes_frontend/.wrangler
+frontend/recipes_frontend/.svelte-kit
+/build
+
+# OS
+frontend/recipes_frontend/.DS_Store
+frontend/recipes_frontend/Thumbs.db
+
+# Env
+frontend/recipes_frontend/.env
+frontend/recipes_frontend/.env.*
+frontend/recipes_frontend/!.env.example
+frontend/recipes_frontend/!.env.test
+
+# Vite
+frontend/recipes_frontend/vite.config.js.timestamp-*
+frontend/recipes_frontend/vite.config.ts.timestamp-*
