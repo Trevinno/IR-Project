@@ -27,6 +27,9 @@ def calculate_similarity_scores(documents_data,
     bm25 = BM25(texts, k1, b, word_weights)
     bm25_scores = bm25.get_scores(query)
 
+    reference_embedding = embeddings[0]  # Using first document as reference
+    bert_scores = [cosine_similarity(reference_embedding, emb) for emb in embeddings]
+
     results = []
     for i, (text, bm25_score, bert_score) in enumerate(zip(texts, bm25_scores, bert_scores)):
         index, column = document_indices[i]
@@ -47,7 +50,7 @@ def calculate_similarity_scores(documents_data,
     return results[:max_results]
 
 json_data_path= '../../data/processed/word_embeddings.json'
-query = 'Chicken oliven, rosted, made in spring'
+query = 'Chicken Fajitas with Pasta and Cheese'
 
 word_weights = {
         "meal": 4,

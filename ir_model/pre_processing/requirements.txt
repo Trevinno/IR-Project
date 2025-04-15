@@ -3,3 +3,5 @@ torch
 typing
 tqdm
 nltk
+pandas
+sentence_transformers
