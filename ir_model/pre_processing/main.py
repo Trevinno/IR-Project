@@ -1,12 +1,13 @@
+print('hello first')
+
 from utils import SentenceTransformerWordEmbeddings
 import numpy as np
 import json
 import pickle
 
+processor = SentenceTransformerWordEmbeddings(model_name='distilbert-base-nli-mean-tokens', device='cpu')
 
-processor = SentenceTransformerWordEmbeddings(model_name="distilbert-base-nli-mean-tokens")
-
-text_columns =['tags', 'steps', 'description', 'ingredients']
+text_columns =['name', 'tags', 'steps', 'description', 'ingredients']
 
 # Process CSV
 embeddings_results = processor.process_csv(

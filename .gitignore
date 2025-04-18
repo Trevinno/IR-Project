@@ -15,6 +15,9 @@ ir_model/backend/venv/*
 ir_model/backend/__pycache__/*
 
 
+backend/py_venv/*
+
+
 # Front end gitignore
 frontend/recipes_frontend/node_modules
 

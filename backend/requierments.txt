@@ -1,2 +1,9 @@
 flask
 flask_cors
+numpy
+torch
+typing
+tqdm
+nltk
+pandas
+sentence_transformers

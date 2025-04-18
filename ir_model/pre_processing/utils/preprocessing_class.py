@@ -18,7 +18,7 @@ class SentenceTransformerWordEmbeddings:
         model_name: str = "distilbert-base-nli-mean-tokens",
         device: Optional[str] = None,
         batch_size: int = 32
-    ):
+    ):  
         # Determine device
         if device is None:
             self.device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -27,6 +27,7 @@ class SentenceTransformerWordEmbeddings:
             
         # Load model
         self.model = SentenceTransformer(model_name, device=self.device)
+
         self.model_name = model_name
         self.batch_size = batch_size
 
@@ -145,8 +146,6 @@ class SentenceTransformerWordEmbeddings:
                 raise ValueError(f"Column '{col}' not found in CSV")
         
         all_results = {}
-        
-
 
         if sentence_embeddings:
             for index, col in enumerate(text_columns):
@@ -185,3 +184,12 @@ class SentenceTransformerWordEmbeddings:
         self.save_data(final_json, output_path)
             
         return final_json
+
+
+    def simple_transformation(
+        self, 
+        sentence: str, 
+    ) -> List[float]:
+        sentence_embedding = self.model.encode(sentence, batch_size=self.batch_size, show_progress_bar=False).tolist()
+        
+        return sentence_embedding

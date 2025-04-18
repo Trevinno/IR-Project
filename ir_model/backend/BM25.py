@@ -100,23 +100,23 @@ class BM25:
         return scored_names[:recipe_max]
 
 
-#This is where we add our input
-if __name__ == "__main__":
-    recipeNames = [
-        "Johnny boys big mash and chicken",
-        "Home cooked chicken meal good times",
-        "Yes, its fresh broccoli, good"
-    ]
+# #This is where we add our input
+# if __name__ == "__main__":
+#     recipeNames = [
+#         "Johnny boys big mash and chicken",
+#         "Home cooked chicken meal good times",
+#         "Yes, its fresh broccoli, good"
+#     ]
     
-    #This is where we add our extra weights
-    word_weights = {
-        "meal": 4,    #"meal" is 4 times more important
-        "chicken": 2,
-        "pasta": 15
-    }
+#     #This is where we add our extra weights
+#     word_weights = {
+#         "meal": 4,    #"meal" is 4 times more important
+#         "chicken": 2,
+#         "pasta": 15
+#     }
 
-    #We have nothing for punctuation! (this could be done in preprocessing or here)
-    bm25 = BM25(recipeNames, word_weights=word_weights)
-    results = bm25.search("good", 50)
-    for name_id, score in results:
-        print(f"Recipe {name_id} - {score:.3f}")
+#     #We have nothing for punctuation! (this could be done in preprocessing or here)
+#     bm25 = BM25(recipeNames, word_weights=word_weights)
+#     results = bm25.search("good", 50)
+#     for name_id, score in results:
+#         print(f"Recipe {name_id} - {score:.3f}")
