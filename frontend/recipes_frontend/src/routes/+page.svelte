@@ -40,8 +40,16 @@
   
     async function handleSearch() {
       if (!browser || !searchQuery.trim()) return;
+      
+        const queryParams = new URLSearchParams();
+        queryParams.set('q', searchQuery);
+  
+        selectedDietary.forEach(diet => queryParams.append('diet', diet));
+
+        selectedCuisine.forEach(cuisine => queryParams.append('cuisine', cuisine));
+
       try {
-        const response = await fetch(`http://127.0.0.1:5000/search?q=${searchQuery}`);
+        const response = await fetch(`http://127.0.0.1:5000/search?q=${queryParams.toString()}`);
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
         const data = await response.json();
         searchResults = data.results;
@@ -141,16 +149,16 @@
       <h2>Results:</h2>
       {#each searchResults as result}
         <div class="recipe-card">
-          <h3>{result.title} <small>({result.cuisine})</small></h3>
-          <p><strong>Diet:</strong> {result.diet.join(', ')}</p>
-          <p><strong>Steps:</strong> {result.steps.join(' → ')}</p>
+          <h3>{result.columns.name.text}</h3>
+          <p><strong>Ingredients:</strong> {result.columns.ingredients.text.replace(/ /g, ', ')}</p>
+          <p><strong>Steps:</strong> {result.columns.steps.text.replace(/,/g, ' → ')}</p>
+          <p><strong>Description:</strong> {result.columns.description.text}</p>
           <div class="card-actions">
           </div>
         </div>
       {/each}
     </div>
-  {/if}
-  
+  {/if}  
   
   <footer class="footer">
     Bon Appétit! 👩‍🍳
