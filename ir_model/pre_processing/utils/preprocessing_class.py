@@ -11,17 +11,18 @@ import nltk
 import ast
 import json
 
+# import s3fs
 
 class SentenceTransformerWordEmbeddings:
     def __init__(
         self, 
-        model_name: str = "distilbert-base-nli-mean-tokens",
+        model_name: str = 'distilbert-base-nli-mean-tokens',
         device: Optional[str] = None,
         batch_size: int = 32
     ):  
         # Determine device
         if device is None:
-            self.device = "cuda" if torch.cuda.is_available() else "cpu"
+            self.device = 'cuda' if torch.cuda.is_available() else 'cpu'
         else:
             self.device = device
             
@@ -40,7 +41,6 @@ class SentenceTransformerWordEmbeddings:
 
         }
         
-        # Download NLTK resources if needed
         try:
             nltk.data.find('tokenizers/punkt')
         except LookupError:
@@ -53,60 +53,44 @@ class SentenceTransformerWordEmbeddings:
             print('downloading punkt tab')
             nltk.download('punkt_tab')
             
-        print(f"Model '{model_name}' loaded on {self.device}")
+        print('Model {} loaded on {}'.format(model_name, self.device))
     
     def change_model(self, model_name: str):
         self.model = SentenceTransformer(model_name, device=self.device)
         self.model_name = model_name
-        print(f"Model changed to '{model_name}'")
+        print('Model changed to {}'.format(model_name))
 
     def create_word_embeddings(self, tokenized_texts: List[List[str]]) -> List[Dict[str, np.ndarray]]:
-        # Flatten list of words for batch processing
-        all_words = []
-        word_to_doc = []  # Track which document each word came from
-        
-        for doc_idx, words in enumerate(tokenized_texts):
-            unique_words = list(set(words))  # Only process unique words in each document
-            all_words.extend(unique_words)
-            word_to_doc.extend([doc_idx] * len(unique_words))
-        
-        # Get embeddings for all words in batches
-        word_embeddings = []
-        for i in tqdm(range(0, len(all_words), self.batch_size), desc="Embedding words"):
-            batch_words = all_words[i:i+self.batch_size]
-            with torch.no_grad():
-                embeddings = self.model.encode(batch_words, convert_to_numpy=True)
-            word_embeddings.append(embeddings)
-        
-        if word_embeddings:
-            all_word_embeddings = np.vstack(word_embeddings)
-        else:
-            # Handle empty case
-            all_word_embeddings = np.array([])
-        
-        # Group word embeddings by document
-        doc_word_embeddings = []
-        for i in range(len(tokenized_texts)):
-            doc_word_embeddings.append({})
-        
-        # Map each word embedding back to its document
-        for idx, (word, doc_idx) in enumerate(zip(all_words, word_to_doc)):
-            doc_word_embeddings[doc_idx][word] = all_word_embeddings[idx]
-        
-        return doc_word_embeddings
+        print('Not needed')
 
     def save_data(
         self,
         results,
         output_path: [str]
-    ):  
+    ):
 
-        # Save embeddings if output path is provided
+        # Save embeddings
         if output_path:
             os.makedirs(os.path.dirname(output_path), exist_ok=True)
             with open(output_path, 'w') as f:
                 json.dump(results, f)
-            print(f"Word embeddings saved to {output_path}")
+            print('Word embeddings saved to {}'.format(output_path))
+
+        # Online implementation
+
+        # if not output_path.startswith("s3://"):
+        #     raise ValueError("Output path must be an S3 URI")
+
+        # s3_parts = output_path[5:].split('/', 1)
+        # bucket = s3_parts[0]
+        # key = s3_parts[1]
+
+        # s3 = boto3.client('s3')
+
+        # json_str = json.dumps(results)
+
+        # s3.put_object(Bucket=bucket, Key=key, Body=json_str.encode('utf-8'))
+
 
     def get_word_embeddings(
         self,
@@ -130,11 +114,17 @@ class SentenceTransformerWordEmbeddings:
         csv_path: str, 
         text_columns: Union[str, List[str]], 
         output_path: Optional[str] = None,
-        sentence_embeddings: bool = True
+        sentence_embeddings: bool = True,
+        online_hosting: bool = False
     ) -> Dict[str, Dict[str, List]]:
-        # Read CSV
-        df = pd.read_csv(csv_path)
-        print(f"CSV loaded with {len(df)} rows")
+
+        
+        if online_hosting:
+            bucket_name = 's3://open-bucket-ir-qmul'
+            df = pd.read_csv(bucket_name + csv_path, storage_options=storage_options)
+        else:
+            df = pd.read_csv(csv_path)
+        print('CSV loaded with {} rows'.format(len(df)))
         
         # Ensure text_columns is a list
         if isinstance(text_columns, str):
@@ -143,7 +133,7 @@ class SentenceTransformerWordEmbeddings:
         # Validate columns
         for col in text_columns:
             if col not in df.columns:
-                raise ValueError(f"Column '{col}' not found in CSV")
+                raise ValueError('Column {} not found in CSV'.format(col))
         
         all_results = {}
 

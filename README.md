@@ -27,8 +27,5 @@ information-retrieval-bert/\
 ├── README.md\
 └── .gitignore
 
-# Distribution of labor
-
-Ozge - UI & Backend\
-Ricardo & Fred - BERT & BM25\
-Georgia - Video
+# Running the application
+In order two run the application only two "programs need to be running", the backend directory and the front end directory. You would want to go inside the backend directory and run, py .\app.py. For the front end you would want to go inside the frontend directory, then the recipes_frontend directory and run, npm run dev. These two commands need to be ran after downloading the dependencies. To download the dependencies for the flask app run, pip install -r requirements.txt. To download the dependencies for the front end app run, npm install. More specific instructions are included in each of the directories where the commands need to be run. When running the application make sure to wait after each search, given that clicking the search bar several times can make the application crash.

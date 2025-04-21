@@ -6,13 +6,19 @@ import sys
 import os
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-print('still working')
 from ir_model.backend import fetch_results
-print('not working')
 app = Flask(__name__)
 CORS(app)
 
-data_path= '../data/processed/word_embeddings.json'
+local_data_path = '../data/processed/word_embeddings.json'
+
+
+s3_data = False
+
+if s3_data:
+    data_path = s3_data_path
+else:
+    data_path = local_data_path
 
 recipes = [
     {
@@ -57,11 +63,10 @@ def search():
     query = request.args.get('q', '').lower()
     query_diet = request.args.getlist('diet')
     query_cusine = request.args.getlist('cuisine')
-    print(query_diet)
-    # results = [r for r in recipes if query in r['name'].lower()]
-    recipes = fetch_results(query, data_path, 4, query_diet, query_cusine)
 
-    return jsonify({"results": recipes})
+    recipes = fetch_results(query, data_path, 10, query_diet, query_cusine)
+
+    return jsonify({'results': recipes})
 
 if __name__ == '__main__':
     app.run(debug=True)
