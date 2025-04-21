@@ -3,7 +3,6 @@
 data/.DS_Store
 
 data/raw/*
-data/processed/*
 
 ir_model/pre_processing/py_venv/*
 ir_model/pre_processing/venv/*
